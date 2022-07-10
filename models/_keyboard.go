@@ -17,7 +17,6 @@ const (
 
 type KeyboardStruct struct {
 	gorm.Model
-	ID            string `gorm:"primaryKey"`
 	Name          string
 	Type          KeyboardType
 	Switches      string

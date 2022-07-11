@@ -12,14 +12,23 @@ type Product struct {
 	Description string
 	CategoryID  uint
 	Category    Category
-	LeftInStock int
 }
 
-type ProductInOrder struct {
-	ProductID uint
-	OrderID   uint
+type ProductStock struct {
+	ProductID uint `gorm:"primaryKey"`
 	Product   Product
-	Name      string
-	Price     uint
+	Stock     uint
+}
+
+type ProductInCart struct {
+	ProductID uint `gorm:"primaryKey"`
+	Product   Product
 	Amount    uint
+	CartID    uint
+}
+type ProductInOrder struct {
+	ProductID uint `gorm:"primaryKey"`
+	Product   Product
+	Amount    uint
+	OrderID   uint
 }

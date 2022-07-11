@@ -6,12 +6,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Login       string    `json:"login"`
-	Email       string    `json:"email"`
-	Password    string    `json:"password"`
-	ItemsInCart []Product `json:"itemsInCart" gorm:"many2many:user_carts;"`
-	Orders      []Order   `json:"orders"`
-	Addresses   []Address `json:"addresses"`
+	Login     string    `json:"login"`
+	Email     string    `json:"email"`
+	Password  string    `json:"password"`
+	Cart      Cart      `json:"cart"`
+	Orders    []Order   `json:"orders"`
+	Addresses []Address `json:"addresses"`
 }
 
 type Address struct {

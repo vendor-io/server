@@ -7,40 +7,41 @@ import (
 	"keyboardify-server/models/dto"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
-var db, err = gorm.Open(sqlite.Open("keyboardify_gorm.db"), &gorm.Config{})
-
 func GetAllUsers(c echo.Context) error {
-	if err != nil {
+	if Err != nil {
 		panic("failed to connect database")
 	}
 
 	var users []models.User
-	db.Find(&users)
+	Db.Find(&users)
 
 	return c.JSON(http.StatusOK, users)
 }
 
 func GetUserById(c echo.Context) error {
 	id := c.Param("id")
-	return c.String(http.StatusOK, id)
+	user := new(models.User)
+	Db.Where("ID = ?", id).First(&user)
+	return c.JSON(http.StatusOK, user)
 }
 
 func CreateUser(c echo.Context) error {
-	u := new(models.User)
-	if err = c.Bind(u); err != nil {
-		return err
+	u := new(dto.UserDTO)
+	if Err = c.Bind(u); Err != nil {
+		return Err
 	}
 
-	user := dto.UserDTO{
-		Login:    u.Login,
-		Email:    u.Email,
-		Password: u.Password,
+	user := models.User{
+		Login:     u.Login,
+		Email:     u.Email,
+		Password:  u.Password,
+		Cart:      models.Cart{},
+		Orders:    []models.Order{},
+		Addresses: []models.Address{},
 	}
-	db.Create(u)
+	Db.Create(&user)
 
 	return c.JSON(http.StatusCreated, user)
 }

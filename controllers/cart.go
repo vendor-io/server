@@ -10,15 +10,10 @@ import (
 )
 
 func GetCartForUser(c echo.Context) error {
-	if Err != nil {
-		panic("failed to connect database")
-	}
-	var uid = new(dto.UserIdDTO)
-	if Err = c.Bind(uid); Err != nil {
-		return Err
-	}
+	id := c.Param("id")
+
 	var foundCart models.Cart
-	Db.Model(&models.Cart{}).Preload("Products").Find(uid).First(&foundCart)
+	Db.Where("UserID = ?", id).First(&foundCart)
 
 	var totalPrice uint = 0
 	for i := 0; i <= len(foundCart.ProductsInCart); i++ {

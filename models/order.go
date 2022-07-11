@@ -17,10 +17,10 @@ const (
 
 type Order struct {
 	gorm.Model
-	UserID      uint
-	User        User
-	Products    []ProductInOrder
-	TotalPrice  int
-	OrderStatus orderStatus
-	IsPaid      bool
+	UserID          uint
+	User            User
+	ProductsInOrder []ProductInOrder
+	TotalPrice      int
+	OrderStatus     orderStatus
+	IsPaid          bool
 }

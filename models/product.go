@@ -7,8 +7,8 @@ import (
 type Product struct {
 	gorm.Model
 	Name        string
-	EAN         uint8
-	Price       uint
+	EAN         uint64
+	Price       uint64
 	Description string
 	CategoryID  uint
 	Category    Category
@@ -23,12 +23,12 @@ type ProductStock struct {
 type ProductInCart struct {
 	ProductID uint `gorm:"primaryKey"`
 	Product   Product
-	Amount    uint
+	Amount    uint64
 	CartID    uint
 }
 type ProductInOrder struct {
 	ProductID uint `gorm:"primaryKey"`
 	Product   Product
-	Amount    uint
+	Amount    uint64
 	OrderID   uint
 }

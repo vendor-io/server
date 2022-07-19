@@ -2,8 +2,8 @@ package dto
 
 type ProductDTO struct {
 	Name        string
-	EAN         uint8
-	Price       uint
+	EAN         string
+	Price       string
 	Description string
 	Category    string
 }

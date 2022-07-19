@@ -10,5 +10,5 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=FoxSaysDerp_keyboardify-server&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=FoxSaysDerp_keyboardify-server)
 ---
 ### Repos 📝
-- [server](https://github.com/foxsaysderp/keyboardify-server)
+- [Client](https://github.com/foxsaysderp/keyboardify-client)
 - [Server](https://github.com/foxsaysderp/keyboardify-server)

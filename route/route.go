@@ -14,4 +14,10 @@ func Init(g *echo.Group) {
 	g.GET("/users", controllers.GetAllUsers)
 	g.GET("/users/:id", controllers.GetUserById)
 	g.POST("/users", controllers.CreateUser)
+
+	g.GET("/products", controllers.GetAllProducts)
+	g.POST("/products", controllers.AddNewProduct)
+
+	g.GET("/categories", controllers.GetAllCategories)
+	g.POST("/categories", controllers.AddNewCategory)
 }

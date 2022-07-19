@@ -15,7 +15,7 @@ func GetCartForUser(c echo.Context) error {
 	var foundCart models.Cart
 	Db.Where("UserID = ?", id).First(&foundCart)
 
-	var totalPrice uint = 0
+	var totalPrice uint64 = 0
 	for i := 0; i <= len(foundCart.ProductsInCart); i++ {
 		totalPrice += foundCart.ProductsInCart[i].Product.Price * foundCart.ProductsInCart[i].Amount
 	}

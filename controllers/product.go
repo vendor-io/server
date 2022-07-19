@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"keyboardify-server/models"
 	"keyboardify-server/models/dto"
@@ -24,12 +25,15 @@ func AddNewProduct(c echo.Context) error {
 	}
 
 	var foundCategory models.Category
-	Db.Model(&models.Category{}).Preload("Name").Find(p.Category).First(&foundCategory)
+	Db.Where("Name = ?", p.Category).First(&foundCategory)
+
+	eanUint, eanUintErr := strconv.ParseUint(p.EAN, 10, 32)
+	priceUint, priceUintErr := strconv.ParseUint(p.Price, 10, 32)
 
 	product := models.Product{
 		Name:        p.Name,
-		EAN:         p.EAN,
-		Price:       p.Price,
+		EAN:         eanUint,
+		Price:       priceUint,
 		Description: p.Description,
 		CategoryID:  foundCategory.ID,
 		Category:    foundCategory,
@@ -41,8 +45,18 @@ func AddNewProduct(c echo.Context) error {
 		Stock:     0,
 	}
 
-	Db.Create(&product)
-	Db.Create(&productStock)
+	println(eanUintErr, priceUintErr)
 
-	return c.JSON(http.StatusCreated, product)
+	result := Db.Where("EAN = ?", eanUint).First(&models.Product{})
+
+	if result.Error != nil {
+		Db.Create(&product)
+		Db.Create(&productStock)
+
+		Db.Model(&models.Category{}).Where("Name = ?", foundCategory.Name).Update("ItemsAmount", foundCategory.ItemsAmount+1)
+
+		return c.JSON(http.StatusCreated, product)
+	}
+
+	return c.JSON(http.StatusConflict, "Product already exists!")
 }

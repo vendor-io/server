@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"keyboardify-server/db"
 	"keyboardify-server/models"
@@ -66,6 +67,8 @@ func AddNewProduct(c echo.Context) error {
 		images = append(images, fmt.Sprintf("http://localhost:8000/api/public/images/%s", file.Filename))
 	}
 
+	imagesToString := strings.Join(images, ";")
+
 	var foundCategory models.Category
 	Db.Where("Name = ?", p.Category).First(&foundCategory)
 
@@ -78,7 +81,7 @@ func AddNewProduct(c echo.Context) error {
 		Price:       priceUint,
 		Description: p.Description,
 		Category:    foundCategory,
-		Images:      images,
+		Images:      imagesToString,
 		Stock:       0,
 	}
 

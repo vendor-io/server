@@ -1,9 +1,14 @@
 package controllers
 
 import (
+	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
+	"keyboardify-server/db"
 	"keyboardify-server/models"
 	"keyboardify-server/models/dto"
 
@@ -17,11 +22,48 @@ func GetAllProducts(c echo.Context) error {
 	return c.JSON(http.StatusOK, products)
 }
 
-func AddNewProduct(c echo.Context) error {
-	var p = new(dto.ProductDTO)
+func GetProductById(c echo.Context) error {
+	id := c.Param("id")
+	product := new(models.Product)
+	Db.Where("ID = ?", id).First(&product)
+	return c.JSON(http.StatusOK, product)
+}
 
-	if Err = c.Bind(p); Err != nil {
-		return Err
+func AddNewProduct(c echo.Context) error {
+	var p = dto.ProductDTO{
+		Name:        c.FormValue("productName"),
+		EAN:         c.FormValue("productEan"),
+		Price:       c.FormValue("productPrice"),
+		Description: c.FormValue("productDescription"),
+		Category:    c.FormValue("productCategory"),
+	}
+
+	// Product Images
+	form, err := c.MultipartForm()
+	if err != nil {
+		return err
+	}
+	files := form.File["productImages"]
+	var images []string
+
+	for _, file := range files {
+		src, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
+
+		dst, err := os.Create(filepath.Join(db.ImagesPublicPath, file.Filename))
+		if err != nil {
+			return err
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return err
+		}
+
+		images = append(images, fmt.Sprintf("http://localhost:8000/api/public/images/%s", file.Filename))
 	}
 
 	var foundCategory models.Category
@@ -35,14 +77,9 @@ func AddNewProduct(c echo.Context) error {
 		EAN:         eanUint,
 		Price:       priceUint,
 		Description: p.Description,
-		CategoryID:  foundCategory.ID,
 		Category:    foundCategory,
-	}
-
-	productStock := models.ProductStock{
-		ProductID: product.ID,
-		Product:   product,
-		Stock:     0,
+		Images:      images,
+		Stock:       0,
 	}
 
 	println(eanUintErr, priceUintErr)
@@ -51,7 +88,6 @@ func AddNewProduct(c echo.Context) error {
 
 	if result.Error != nil {
 		Db.Create(&product)
-		Db.Create(&productStock)
 
 		Db.Model(&models.Category{}).Where("Name = ?", foundCategory.Name).Update("ItemsAmount", foundCategory.ItemsAmount+1)
 

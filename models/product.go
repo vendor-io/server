@@ -12,12 +12,8 @@ type Product struct {
 	Description string
 	CategoryID  uint
 	Category    Category
-}
-
-type ProductStock struct {
-	ProductID uint `gorm:"primaryKey"`
-	Product   Product
-	Stock     uint
+	Images      []string
+	Stock       uint
 }
 
 type ProductInCart struct {

@@ -64,7 +64,7 @@ func AddNewProduct(c echo.Context) error {
 			return err
 		}
 
-		images = append(images, fmt.Sprintf("http://localhost:8000/api/public/images/%s", file.Filename))
+		images = append(images, fmt.Sprintf("%s/api/public/images/%s", os.Getenv("URL"), file.Filename))
 	}
 
 	imagesToString := strings.Join(images, ";")

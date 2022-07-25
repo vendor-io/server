@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
@@ -12,6 +13,8 @@ import (
 )
 
 func main() {
+	godotenv.Load()
+
 	e := echo.New()
 
 	logger := zerolog.New(os.Stdout)
@@ -37,5 +40,5 @@ func main() {
 
 	route.Init(e.Group("/api"))
 
-	e.Logger.Fatal(e.Start(":8000"))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }

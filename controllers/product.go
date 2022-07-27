@@ -1,17 +1,13 @@
 package controllers
 
 import (
-	"fmt"
-	"io"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
-	"keyboardify-server/db"
 	"keyboardify-server/models"
 	"keyboardify-server/models/dto"
+	"keyboardify-server/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,33 +35,7 @@ func AddNewProduct(c echo.Context) error {
 		Category:    c.FormValue("productCategory"),
 	}
 
-	// Product Images
-	form, err := c.MultipartForm()
-	if err != nil {
-		return err
-	}
-	files := form.File["productImages"]
-	var images []string
-
-	for _, file := range files {
-		src, err := file.Open()
-		if err != nil {
-			return err
-		}
-		defer src.Close()
-
-		dst, err := os.Create(filepath.Join(db.ImagesPublicPath, file.Filename))
-		if err != nil {
-			return err
-		}
-		defer dst.Close()
-
-		if _, err = io.Copy(dst, src); err != nil {
-			return err
-		}
-
-		images = append(images, fmt.Sprintf("%s/api/public/images/%s", os.Getenv("URL"), file.Filename))
-	}
+	images := util.MultipleFileUpload(c, "productImages", "images")
 
 	imagesToString := strings.Join(images, ";")
 

@@ -12,6 +12,7 @@ type Product struct {
 	Description string
 	CategoryID  uint
 	Category    Category
+	MainImage   string
 	Images      string
 	Stock       uint
 }

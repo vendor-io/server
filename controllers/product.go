@@ -51,6 +51,7 @@ func AddNewProduct(c echo.Context) error {
 		Price:       priceUint,
 		Description: p.Description,
 		Category:    foundCategory,
+		MainImage:   images[0],
 		Images:      imagesToString,
 		Stock:       0,
 	}

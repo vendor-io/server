@@ -16,6 +16,10 @@ func GetAllProducts(c echo.Context) error {
 	var products []models.Product
 	Db.Find(&products)
 
+	for i, j := 0, len(products)-1; i < j; i, j = i+1, j-1 {
+		products[i], products[j] = products[j], products[i]
+	}
+
 	return c.JSON(http.StatusOK, products)
 }
 
@@ -23,6 +27,7 @@ func GetProductById(c echo.Context) error {
 	id := c.Param("id")
 	product := new(models.Product)
 	Db.Where("ID = ?", id).First(&product)
+	Db.Where("ID = ?", product.CategoryID).First(&product.Category)
 	return c.JSON(http.StatusOK, product)
 }
 
@@ -40,7 +45,7 @@ func AddNewProduct(c echo.Context) error {
 	imagesToString := strings.Join(images, ";")
 
 	var foundCategory models.Category
-	Db.Where("Name = ?", p.Category).First(&foundCategory)
+	Db.Where("Name = ?", c.FormValue("productCategory")).First(&foundCategory)
 
 	eanUint, eanUintErr := strconv.ParseUint(p.EAN, 10, 32)
 	priceUint, priceUintErr := strconv.ParseUint(p.Price, 10, 32)

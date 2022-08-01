@@ -5,6 +5,7 @@ import (
 
 	"keyboardify-server/models"
 	"keyboardify-server/models/dto"
+	"keyboardify-server/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -25,6 +26,7 @@ func AddNewCategory(c echo.Context) error {
 
 	category := models.Category{
 		Name:        cat.Name,
+		Slug:        util.ToSnakeCase(cat.Name),
 		ItemsAmount: 0,
 	}
 

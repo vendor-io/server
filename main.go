@@ -8,7 +8,10 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 
+	"keyboardify-server/auth"
+	"keyboardify-server/controllers"
 	"keyboardify-server/db"
+	mdlwr "keyboardify-server/middleware"
 	"keyboardify-server/route"
 )
 
@@ -16,6 +19,15 @@ func main() {
 	godotenv.Load()
 
 	e := echo.New()
+	firebaseAuth := auth.InitFirebase()
+
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("db", controllers.Db)
+			c.Set("firebaseAuth", firebaseAuth)
+			return next(c)
+		}
+	})
 
 	logger := zerolog.New(os.Stdout)
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
@@ -33,12 +45,13 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
 	db.Init()
 
-	route.Init(e.Group("/api"))
+	e.Static("/api/public", "public")
+	route.Init(e.Group("/api", mdlwr.Auth))
 
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }

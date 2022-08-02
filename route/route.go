@@ -10,8 +10,6 @@ import (
 )
 
 func Init(g *echo.Group) {
-	g.Static("/public", "public")
-
 	g.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, fmt.Sprintf("%s Backend 0.0.1", os.Getenv("APP")))
 	})

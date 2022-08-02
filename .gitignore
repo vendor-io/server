@@ -1,3 +1,4 @@
 keyboardify_gorm.db
 public/
 .env
+auth/key/**

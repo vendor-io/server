@@ -18,6 +18,7 @@ func InitUser(g *echo.Group) {
 
 	g.GET("/products", controllers.GetAllProducts)
 	g.GET("/products/:id", controllers.GetProductById)
+	g.GET("/products/category/:slug", controllers.GetProductsByCategorySlug)
 
 	g.GET("/categories", controllers.GetAllCategories)
 

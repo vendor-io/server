@@ -32,6 +32,22 @@ func GetProductById(c echo.Context) error {
 	return c.JSON(http.StatusOK, product)
 }
 
+func GetProductsByCategorySlug(c echo.Context) error {
+	slug := c.Param("slug")
+
+	var foundCategory models.Category
+	Db.Where("slug = ?", slug).First(&foundCategory)
+
+	var products []models.Product
+	Db.Where("category_id = ?", foundCategory.ID).Find(&products)
+
+	for i, j := 0, len(products)-1; i < j; i, j = i+1, j-1 {
+		products[i], products[j] = products[j], products[i]
+	}
+
+	return c.JSON(http.StatusOK, products)
+}
+
 func AddNewProduct(c echo.Context) error {
 	var p = dto.ProductDTO{
 		Name:        c.FormValue("productName"),

@@ -17,6 +17,14 @@ func GetAllCategories(c echo.Context) error {
 	return c.JSON(http.StatusOK, categories)
 }
 
+func GetCategoryBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	category := new(models.Category)
+	Db.Where("Slug = ?", slug).First(&category)
+
+	return c.JSON(http.StatusOK, category)
+}
+
 func AddNewCategory(c echo.Context) error {
 	var cat = new(dto.CategoryDTO)
 

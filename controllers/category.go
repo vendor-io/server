@@ -34,6 +34,7 @@ func AddNewCategory(c echo.Context) error {
 
 	category := models.Category{
 		Name:        cat.Name,
+		Description: cat.Description,
 		Slug:        util.ToKebabCase(cat.Name),
 		ItemsAmount: 0,
 	}

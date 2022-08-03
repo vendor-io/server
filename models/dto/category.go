@@ -1,5 +1,6 @@
 package dto
 
 type CategoryDTO struct {
-	Name string
+	Name        string
+	Description string
 }

@@ -40,7 +40,7 @@ func CheckIfUserIsSuperUser(c echo.Context) error {
 	result := Db.Where("uid = ? AND is_super_user = ?", uid, true).First(&user)
 
 	if result.Error != nil {
-		return c.JSON(http.StatusUnauthorized, "false")
+		return c.JSON(http.StatusOK, "false")
 	}
 
 	return c.JSON(http.StatusOK, "true")

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -15,9 +14,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		firebaseAuth := c.Get("firebaseAuth").(*auth.Client)
 
 		authorizationToken := c.Request().Header.Get("Authorization")
-		fmt.Println(authorizationToken)
 		idToken := strings.TrimSpace(strings.Replace(authorizationToken, "Bearer", "", 1))
-		fmt.Println(idToken)
 
 		if idToken == "" {
 			c.String(http.StatusBadRequest, "Id token not available")

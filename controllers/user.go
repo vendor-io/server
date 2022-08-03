@@ -34,6 +34,18 @@ func GetUserByUid(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
+func CheckIfUserIsSuperUser(c echo.Context) error {
+	uid := c.Param("uid")
+	user := new(models.User)
+	result := Db.Where("uid = ? AND is_super_user = ?", uid, true).First(&user)
+
+	if result.Error != nil {
+		return c.JSON(http.StatusUnauthorized, "false")
+	}
+
+	return c.JSON(http.StatusOK, "true")
+}
+
 func CreateUser(c echo.Context) error {
 	u := new(dto.NewUserDTO)
 	if Err = c.Bind(u); Err != nil {

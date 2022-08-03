@@ -14,6 +14,8 @@ func InitUser(g *echo.Group) {
 		return c.String(http.StatusOK, fmt.Sprintf("%s Backend 0.0.1", os.Getenv("APP")))
 	})
 
+	g.GET("/su/:uid", controllers.CheckIfUserIsSuperUser)
+
 	g.GET("/products", controllers.GetAllProducts)
 	g.GET("/products/:id", controllers.GetProductById)
 

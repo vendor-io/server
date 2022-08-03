@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Auth(next echo.HandlerFunc) echo.HandlerFunc {
+func UserAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		firebaseAuth := c.Get("firebaseAuth").(*auth.Client)
 

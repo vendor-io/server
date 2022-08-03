@@ -6,12 +6,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Login     string    `json:"login"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Cart      Cart      `json:"cart"`
-	Orders    []Order   `json:"orders"`
-	Addresses []Address `json:"addresses"`
+	Email       string    `json:"email"`
+	UID         string    `json:"uid"`
+	IsSuperUser bool      `json:"isSuperUser"`
+	Cart        Cart      `json:"cart"`
+	Orders      []Order   `json:"orders"`
+	Addresses   []Address `json:"addresses"`
 }
 
 type Address struct {

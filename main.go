@@ -51,7 +51,8 @@ func main() {
 	db.Init()
 
 	e.Static("/api/public", "public")
-	route.Init(e.Group("/api", mdlwr.Auth))
+	route.InitUser(e.Group("/api", mdlwr.UserAuth))
+	route.InitSuperUser(e.Group("/su", mdlwr.SuperuserAuth))
 
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }

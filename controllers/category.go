@@ -20,7 +20,7 @@ func GetAllCategories(c echo.Context) error {
 func GetCategoryBySlug(c echo.Context) error {
 	slug := c.Param("slug")
 	category := new(models.Category)
-	Db.Where("Slug = ?", slug).First(&category)
+	Db.Where("slug = ?", slug).First(&category)
 
 	return c.JSON(http.StatusOK, category)
 }
@@ -38,7 +38,7 @@ func AddNewCategory(c echo.Context) error {
 		ItemsAmount: 0,
 	}
 
-	result := Db.Where("Name = ?", category.Name).First(&models.Category{})
+	result := Db.Where("name = ?", category.Name).First(&models.Category{})
 
 	if result.Error != nil {
 		Db.Create(&category)

@@ -13,7 +13,7 @@ func GetCartForUser(c echo.Context) error {
 	id := c.Param("id")
 
 	var foundCart models.Cart
-	Db.Where("UserID = ?", id).First(&foundCart)
+	Db.Where("user_id = ?", id).First(&foundCart)
 
 	var totalPrice uint64 = 0
 	for i := 0; i <= len(foundCart.ProductsInCart); i++ {

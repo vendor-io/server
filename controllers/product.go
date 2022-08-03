@@ -27,8 +27,8 @@ func GetAllProducts(c echo.Context) error {
 func GetProductById(c echo.Context) error {
 	id := c.Param("id")
 	product := new(models.Product)
-	Db.Where("ID = ?", id).First(&product)
-	Db.Where("ID = ?", product.CategoryID).First(&product.Category)
+	Db.Where("id = ?", id).First(&product)
+	Db.Where("id = ?", product.CategoryID).First(&product.Category)
 	return c.JSON(http.StatusOK, product)
 }
 
@@ -46,7 +46,7 @@ func AddNewProduct(c echo.Context) error {
 	imagesToString := strings.Join(images, ";")
 
 	var foundCategory models.Category
-	Db.Where("Name = ?", c.FormValue("productCategory")).First(&foundCategory)
+	Db.Where("name = ?", c.FormValue("productCategory")).First(&foundCategory)
 
 	eanUint, eanUintErr := strconv.ParseUint(p.EAN, 10, 32)
 	priceUint, priceUintErr := strconv.ParseUint(p.Price, 10, 32)
@@ -64,12 +64,12 @@ func AddNewProduct(c echo.Context) error {
 
 	fmt.Println(eanUintErr, priceUintErr)
 
-	result := Db.Where("EAN = ?", eanUint).First(&models.Product{})
+	result := Db.Where("ean = ?", eanUint).First(&models.Product{})
 
 	if result.Error != nil {
 		Db.Create(&product)
 
-		Db.Model(&models.Category{}).Where("Name = ?", foundCategory.Name).Update("ItemsAmount", foundCategory.ItemsAmount+1)
+		Db.Model(&models.Category{}).Where("name = ?", foundCategory.Name).Update("ItemsAmount", foundCategory.ItemsAmount+1)
 
 		return c.JSON(http.StatusCreated, product)
 	}

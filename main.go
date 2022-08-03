@@ -45,12 +45,14 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization, "UID"},
 	}))
 
 	db.Init()
 
 	e.Static("/api/public", "public")
+
+	e.POST("/user/new", controllers.CreateUser)
 	route.InitUser(e.Group("/api", mdlwr.UserAuth))
 	route.InitSuperUser(e.Group("/su", mdlwr.SuperuserAuth))
 

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -61,7 +62,7 @@ func AddNewProduct(c echo.Context) error {
 		Stock:       0,
 	}
 
-	println(eanUintErr, priceUintErr)
+	fmt.Println(eanUintErr, priceUintErr)
 
 	result := Db.Where("EAN = ?", eanUint).First(&models.Product{})
 

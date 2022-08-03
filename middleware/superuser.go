@@ -18,7 +18,7 @@ func SuperuserAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			panic("Id token missing")
 		}
 
-		result := controllers.Db.Where("UID = ? AND IsSuperUser = ?", uidToken, true).First(&models.User{})
+		result := controllers.Db.Where("uid = ? AND is_super_user = ?", uidToken, true).First(&models.User{})
 
 		if result.Error != nil {
 			return c.JSON(http.StatusUnauthorized, "User has insufficient privileges!")

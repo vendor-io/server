@@ -11,7 +11,7 @@ type CartWithTotalPriceDTO struct {
 	TotalPrice uint64
 }
 
-type AddProductDTO struct {
+type CartProductDTO struct {
 	ProductID uint   `json:"productId"`
 	UserID    string `json:"userId"`
 }

@@ -20,11 +20,20 @@ func GetCartForUser(c echo.Context) error {
 	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
 
 	if result.Error != nil {
-		return c.String(http.StatusNotFound, "There isn't a cart for this user.")
+		return c.String(http.StatusOK, "Your cart is empty.")
 	}
 
 	var cartProducts []models.CartProduct
 	Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
+
+	if len(cartProducts) == 0 {
+		cart := dto.CartWithTotalPriceDTO{
+			Products:   []models.Product{},
+			TotalPrice: 0,
+		}
+
+		return c.JSON(http.StatusOK, cart)
+	}
 
 	var cartProductsIDs []uint
 	for i := 0; i <= len(cartProducts)-1; i++ {
@@ -51,7 +60,7 @@ func GetCartForUser(c echo.Context) error {
 }
 
 func AddProductToCart(c echo.Context) error {
-	var addProduct = new(dto.AddProductDTO)
+	var addProduct = new(dto.CartProductDTO)
 
 	if Err = c.Bind(addProduct); Err != nil {
 		return Err
@@ -109,4 +118,25 @@ func AddProductToCart(c echo.Context) error {
 	}
 
 	return c.String(http.StatusBadRequest, "Request is invalid.")
+}
+
+func RemoveProductFromCart(c echo.Context) error {
+	var productToRemove = new(dto.CartProductDTO)
+
+	if Err = c.Bind(productToRemove); Err != nil {
+		return Err
+	}
+
+	var foundUser models.User
+	Db.Where("uid = ?", productToRemove.UserID).First(&foundUser)
+
+	var foundProduct models.Product
+	Db.Where("id = ?", productToRemove.ProductID).First(&foundProduct)
+
+	var foundCart models.Cart
+	Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
+
+	Db.Where("product_id = ? AND cart_id = ?", foundProduct.ID, foundCart.ID).Delete(&models.CartProduct{})
+
+	return c.String(http.StatusAccepted, "Product has been removed from your cart.")
 }

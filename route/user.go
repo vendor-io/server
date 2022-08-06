@@ -25,5 +25,6 @@ func InitUser(g *echo.Group) {
 
 	g.GET("/cart/:uid", controllers.GetCartForUser)
 	g.POST("/cart/add", controllers.AddProductToCart)
+	g.POST("/cart/remove", controllers.RemoveProductFromCart)
 
 }

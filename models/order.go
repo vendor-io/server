@@ -1,9 +1,5 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type orderStatus string
 
 const (
@@ -16,11 +12,11 @@ const (
 )
 
 type Order struct {
-	gorm.Model
-	UserID          uint
-	User            User
-	ProductsInOrder []ProductInOrder
-	TotalPrice      int
-	OrderStatus     orderStatus
-	IsPaid          bool
+	GormModel
+	UserID          uint             `json:"userId"`
+	User            User             `json:"user"`
+	ProductsInOrder []ProductInOrder `json:"productsInOrder"`
+	TotalPrice      int              `json:"totalPrice"`
+	OrderStatus     orderStatus      `json:"orderStatus"`
+	IsPaid          bool             `json:"isPaid"`
 }

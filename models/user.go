@@ -1,11 +1,7 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type User struct {
-	gorm.Model
+	GormModel
 	Email       string    `json:"email"`
 	UID         string    `json:"uid"`
 	IsSuperUser bool      `json:"isSuperUser"`
@@ -15,8 +11,8 @@ type User struct {
 }
 
 type Address struct {
-	gorm.Model
-	UserID      uint
+	GormModel
+	UserID      uint   `json:"userId"`
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	Street      string `json:"street"`

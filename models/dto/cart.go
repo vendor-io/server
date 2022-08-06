@@ -3,12 +3,12 @@ package dto
 import "keyboardify-server/models"
 
 type CartDTO struct {
-	Products []models.Product
+	Products []models.Product `json:"Products"`
 }
 
 type CartWithTotalPriceDTO struct {
-	Products   []models.Product
-	TotalPrice uint64
+	Products   []models.Product `json:"products"`
+	TotalPrice uint64           `json:"totalPrice"`
 }
 
 type CartProductDTO struct {

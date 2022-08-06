@@ -1,16 +1,12 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Cart struct {
-	gorm.Model
-	UserID         uint
-	ProductsInCart []CartProduct
+	GormModel
+	UserID         uint          `json:"userId"`
+	ProductsInCart []CartProduct `json:"productsInCart"`
 }
 
 type CartProduct struct {
-	CartID    uint
-	ProductID uint
+	CartID    uint `json:"cartId"`
+	ProductID uint `json:"productId"`
 }

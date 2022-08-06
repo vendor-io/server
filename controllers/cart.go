@@ -172,5 +172,55 @@ func RemoveProductFromCart(c echo.Context) error {
 
 	Db.Where("product_id = ? AND cart_id = ?", foundProduct.ID, foundCart.ID).Delete(&models.CartProduct{})
 
-	return c.String(http.StatusAccepted, "Product has been removed from your cart.")
+	var cartProducts []models.CartProduct
+	Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
+
+	if len(cartProducts) == 0 {
+		cart := dto.CartWithTotalPriceDTO{
+			Products:   []dto.ProductInCartDTO{},
+			TotalPrice: 0,
+		}
+
+		return c.JSON(http.StatusOK, cart)
+	}
+
+	var cartProductsIDs []uint
+	for i := 0; i <= len(cartProducts)-1; i++ {
+		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
+	}
+
+	var totalPrice uint64 = 0
+	for i := 0; i <= len(cartProductsIDs)-1; i++ {
+		var temporaryProductFromCart models.Product
+		Db.Where("id = ?", cartProductsIDs[i]).First(&temporaryProductFromCart)
+
+		totalPrice += temporaryProductFromCart.Price
+	}
+
+	var productsToDTO []models.Product
+	Db.Where(cartProductsIDs).Find(&productsToDTO)
+
+	var productsDTO []dto.ProductInCartDTO
+	for i := range productsToDTO {
+		var categoryToDTO models.Category
+		Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
+
+		var newProductToCartDTO = dto.ProductInCartDTO{
+			ID:           productsToDTO[i].ID,
+			Name:         productsToDTO[i].Name,
+			MainImage:    productsToDTO[i].MainImage,
+			Price:        productsToDTO[i].Price,
+			CategoryName: categoryToDTO.Name,
+			CategorySlug: categoryToDTO.Slug,
+		}
+
+		productsDTO = append(productsDTO, newProductToCartDTO)
+	}
+
+	cart := dto.CartWithTotalPriceDTO{
+		Products:   productsDTO,
+		TotalPrice: totalPrice,
+	}
+
+	return c.JSON(http.StatusOK, cart)
 }

@@ -52,14 +52,7 @@ func AddProductToCart(c echo.Context) error {
 		return Err
 	}
 
-	var foundUser models.User
-	Db.Where("uid = ?", addProduct.UserID).First(&foundUser)
-
-	var foundProduct models.Product
-	Db.Where("id = ?", addProduct.ProductID).First(&foundProduct)
-
-	var foundCart models.Cart
-	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
+	foundUser, foundProduct, foundCart, result := ControllerDetailsResolver(*addProduct)
 
 	if result.Error != nil {
 		fmt.Println("Creating a new cart.")
@@ -129,14 +122,7 @@ func RemoveProductFromCart(c echo.Context) error {
 		return Err
 	}
 
-	var foundUser models.User
-	Db.Where("uid = ?", productToRemove.UserID).First(&foundUser)
-
-	var foundProduct models.Product
-	Db.Where("id = ?", productToRemove.ProductID).First(&foundProduct)
-
-	var foundCart models.Cart
-	Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
+	_, foundProduct, foundCart, _ := ControllerDetailsResolver(*productToRemove)
 
 	Db.Where("product_id = ? AND cart_id = ?", foundProduct.ID, foundCart.ID).Delete(&models.CartProduct{})
 

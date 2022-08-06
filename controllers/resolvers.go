@@ -3,6 +3,8 @@ package controllers
 import (
 	"keyboardify-server/models"
 	"keyboardify-server/models/dto"
+
+	"gorm.io/gorm"
 )
 
 func CartDTOResolver(ids []uint, cartId uint) dto.CartWithTotalPriceDTO {
@@ -48,4 +50,14 @@ func CartDTOResolver(ids []uint, cartId uint) dto.CartWithTotalPriceDTO {
 	}
 
 	return cart
+}
+
+func ControllerDetailsResolver(cartDto dto.CartProductDTO) (user models.User, product models.Product, cart models.Cart, result *gorm.DB) {
+	Db.Where("uid = ?", cartDto.UserID).First(&user)
+
+	Db.Where("id = ?", cartDto.ProductID).First(&product)
+
+	result = Db.Where("user_id = ?", user.ID).First(&cart)
+
+	return user, product, cart, result
 }

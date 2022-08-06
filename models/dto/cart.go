@@ -8,10 +8,11 @@ type CartDTO struct {
 
 type CartWithTotalPriceDTO struct {
 	Products   []ProductInCartDTO `json:"products"`
-	TotalPrice uint64             `json:"totalPrice"`
+	TotalPrice uint               `json:"totalPrice"`
 }
 
 type CartProductDTO struct {
 	ProductID uint   `json:"productId"`
 	UserID    string `json:"userId"`
+	Amount    uint   `json:"amount"`
 }

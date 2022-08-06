@@ -40,38 +40,7 @@ func GetCartForUser(c echo.Context) error {
 		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
 	}
 
-	var totalPrice uint64 = 0
-	for i := 0; i <= len(cartProductsIDs)-1; i++ {
-		var temporaryProductFromCart models.Product
-		Db.Where("id = ?", cartProductsIDs[i]).First(&temporaryProductFromCart)
-
-		totalPrice += temporaryProductFromCart.Price
-	}
-
-	var productsToDTO []models.Product
-	Db.Where(cartProductsIDs).Find(&productsToDTO)
-
-	var productsDTO []dto.ProductInCartDTO
-	for i := range productsToDTO {
-		var categoryToDTO models.Category
-		Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
-
-		var newProductToCartDTO = dto.ProductInCartDTO{
-			ID:           productsToDTO[i].ID,
-			Name:         productsToDTO[i].Name,
-			MainImage:    productsToDTO[i].MainImage,
-			Price:        productsToDTO[i].Price,
-			CategoryName: categoryToDTO.Name,
-			CategorySlug: categoryToDTO.Slug,
-		}
-
-		productsDTO = append(productsDTO, newProductToCartDTO)
-	}
-
-	cart := dto.CartWithTotalPriceDTO{
-		Products:   productsDTO,
-		TotalPrice: totalPrice,
-	}
+	cart := CartDTOResolver(cartProductsIDs, foundCart.ID)
 
 	return c.JSON(http.StatusOK, cart)
 }
@@ -95,73 +64,59 @@ func AddProductToCart(c echo.Context) error {
 	if result.Error != nil {
 		fmt.Println("Creating a new cart.")
 
+		var newCartForUser = models.Cart{
+			UserID:         foundUser.ID,
+			ProductsInCart: []models.CartProduct{},
+		}
+		Db.Create(newCartForUser)
+
 		newCartProduct := models.CartProduct{
 			ProductID: foundProduct.ID,
-			CartID:    foundCart.ID,
+			CartID:    newCartForUser.ID,
+			Amount:    addProduct.Amount,
 		}
 		Db.Create(newCartProduct)
 
-		var productsToDTO []models.Product
-		Db.Where(newCartProduct.ProductID).Find(&productsToDTO)
+		productsIDs := []uint{foundCart.ID}
+		cart := CartDTOResolver(productsIDs, newCartForUser.ID)
 
-		var productsDTO []dto.ProductInCartDTO
-		for i := range productsToDTO {
-			var categoryToDTO models.Category
-			Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
-
-			var newProductToCartDTO = dto.ProductInCartDTO{
-				ID:           productsToDTO[i].ID,
-				Name:         productsToDTO[i].Name,
-				MainImage:    productsToDTO[i].MainImage,
-				Price:        productsToDTO[i].Price,
-				CategoryName: categoryToDTO.Name,
-				CategorySlug: categoryToDTO.Slug,
-			}
-
-			productsDTO = append(productsDTO, newProductToCartDTO)
-		}
-
-		return c.JSON(http.StatusOK, productsDTO)
+		return c.JSON(http.StatusOK, cart)
 	}
 
 	if result.Error == nil {
 		fmt.Println("Updating a cart.")
 
-		newCartProduct := models.CartProduct{
-			ProductID: foundProduct.ID,
-			CartID:    foundCart.ID,
+		var cartProductToUpdate models.CartProduct
+		result := Db.Where("cart_id = ? AND product_id = ?", foundCart.ID, foundProduct.ID).First(&cartProductToUpdate)
+
+		if result.Error != nil {
+			fmt.Println("A new product has been added - creating new CartProduct instance.")
+
+			newCartProduct := models.CartProduct{
+				ProductID: foundProduct.ID,
+				CartID:    foundCart.ID,
+				Amount:    addProduct.Amount,
+			}
+			Db.Create(newCartProduct)
 		}
-		Db.Create(newCartProduct)
+
+		if result.Error == nil {
+			fmt.Println("A product is already in cart - updating amount.")
+
+			Db.Model(&cartProductToUpdate).Where("cart_id = ? AND product_id = ?", foundCart.ID, foundProduct.ID).Update("amount", cartProductToUpdate.Amount+addProduct.Amount)
+		}
 
 		var cartProducts []models.CartProduct
 		Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
 
 		var cartProductsIDs []uint
-		for i := 0; i <= len(cartProducts)-1; i++ {
+		for i := range cartProducts {
 			cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
 		}
 
-		var productsToDTO []models.Product
-		Db.Where(cartProductsIDs).Find(&productsToDTO)
+		cart := CartDTOResolver(cartProductsIDs, foundCart.ID)
 
-		var productsDTO []dto.ProductInCartDTO
-		for i := range productsToDTO {
-			var categoryToDTO models.Category
-			Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
-
-			var newProductToCartDTO = dto.ProductInCartDTO{
-				ID:           productsToDTO[i].ID,
-				Name:         productsToDTO[i].Name,
-				MainImage:    productsToDTO[i].MainImage,
-				Price:        productsToDTO[i].Price,
-				CategoryName: categoryToDTO.Name,
-				CategorySlug: categoryToDTO.Slug,
-			}
-
-			productsDTO = append(productsDTO, newProductToCartDTO)
-		}
-
-		return c.JSON(http.StatusOK, productsDTO)
+		return c.JSON(http.StatusOK, cart)
 	}
 
 	return c.String(http.StatusBadRequest, "Request is invalid.")
@@ -202,7 +157,7 @@ func RemoveProductFromCart(c echo.Context) error {
 		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
 	}
 
-	var totalPrice uint64 = 0
+	var totalPrice uint = 0
 	for i := 0; i <= len(cartProductsIDs)-1; i++ {
 		var temporaryProductFromCart models.Product
 		Db.Where("id = ?", cartProductsIDs[i]).First(&temporaryProductFromCart)

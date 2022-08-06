@@ -9,4 +9,5 @@ type Cart struct {
 type CartProduct struct {
 	CartID    uint `json:"cartId"`
 	ProductID uint `json:"productId"`
+	Amount    uint `json:"amount"`
 }

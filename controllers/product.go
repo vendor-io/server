@@ -65,7 +65,8 @@ func AddNewProduct(c echo.Context) error {
 	Db.Where("name = ?", c.FormValue("productCategory")).First(&foundCategory)
 
 	eanUint, eanUintErr := strconv.ParseUint(p.EAN, 10, 32)
-	priceUint, priceUintErr := strconv.ParseUint(p.Price, 10, 32)
+	priceUint64, priceUint64Err := strconv.ParseUint(p.Price, 10, 32)
+	priceUint := uint(priceUint64)
 
 	product := models.Product{
 		Name:        p.Name,
@@ -78,7 +79,7 @@ func AddNewProduct(c echo.Context) error {
 		Stock:       0,
 	}
 
-	fmt.Println(eanUintErr, priceUintErr)
+	fmt.Println(eanUintErr, priceUint64Err)
 
 	result := Db.Where("ean = ?", eanUint).First(&models.Product{})
 

@@ -12,7 +12,9 @@ type ProductInCartDTO struct {
 	ID           uint   `json:"id"`
 	Name         string `json:"name"`
 	MainImage    string `json:"mainImage"`
-	Price        uint64 `json:"price"`
+	Price        uint   `json:"price"`
+	Amount       uint   `json:"amount"`
+	TotalPrice   uint   `json:"totalPrice"`
 	CategoryName string `json:"categoryName"`
 	CategorySlug string `json:"categorySlug"`
 }

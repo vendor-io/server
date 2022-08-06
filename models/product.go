@@ -4,7 +4,7 @@ type Product struct {
 	GormModel
 	Name        string   `json:"name"`
 	EAN         uint64   `json:"ean"`
-	Price       uint64   `json:"price"`
+	Price       uint     `json:"price"`
 	Description string   `json:"description"`
 	CategoryID  uint     `json:"categoryId"`
 	Category    Category `json:"category"`

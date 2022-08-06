@@ -28,7 +28,7 @@ func GetCartForUser(c echo.Context) error {
 
 	if len(cartProducts) == 0 {
 		cart := dto.CartWithTotalPriceDTO{
-			Products:   []models.Product{},
+			Products:   []dto.ProductInCartDTO{},
 			TotalPrice: 0,
 		}
 
@@ -51,8 +51,25 @@ func GetCartForUser(c echo.Context) error {
 	var productsToDTO []models.Product
 	Db.Where(cartProductsIDs).Find(&productsToDTO)
 
+	var productsDTO []dto.ProductInCartDTO
+	for i := range productsToDTO {
+		var categoryToDTO models.Category
+		Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
+
+		var newProductToCartDTO = dto.ProductInCartDTO{
+			ID:           productsToDTO[i].ID,
+			Name:         productsToDTO[i].Name,
+			MainImage:    productsToDTO[i].MainImage,
+			Price:        productsToDTO[i].Price,
+			CategoryName: categoryToDTO.Name,
+			CategorySlug: categoryToDTO.Slug,
+		}
+
+		productsDTO = append(productsDTO, newProductToCartDTO)
+	}
+
 	cart := dto.CartWithTotalPriceDTO{
-		Products:   productsToDTO,
+		Products:   productsDTO,
 		TotalPrice: totalPrice,
 	}
 
@@ -87,7 +104,24 @@ func AddProductToCart(c echo.Context) error {
 		var productsToDTO []models.Product
 		Db.Where(newCartProduct.ProductID).Find(&productsToDTO)
 
-		return c.JSON(http.StatusOK, productsToDTO)
+		var productsDTO []dto.ProductInCartDTO
+		for i := range productsToDTO {
+			var categoryToDTO models.Category
+			Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
+
+			var newProductToCartDTO = dto.ProductInCartDTO{
+				ID:           productsToDTO[i].ID,
+				Name:         productsToDTO[i].Name,
+				MainImage:    productsToDTO[i].MainImage,
+				Price:        productsToDTO[i].Price,
+				CategoryName: categoryToDTO.Name,
+				CategorySlug: categoryToDTO.Slug,
+			}
+
+			productsDTO = append(productsDTO, newProductToCartDTO)
+		}
+
+		return c.JSON(http.StatusOK, productsDTO)
 	}
 
 	if result.Error == nil {

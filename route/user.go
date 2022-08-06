@@ -23,4 +23,7 @@ func InitUser(g *echo.Group) {
 	g.GET("/categories", controllers.GetAllCategories)
 	g.GET("/categories/:slug", controllers.GetCategoryBySlug)
 
+	g.GET("/cart/:uid", controllers.GetCartForUser)
+	g.POST("/cart/add", controllers.AddProductToCart)
+
 }

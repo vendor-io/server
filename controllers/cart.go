@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"keyboardify-server/models"
@@ -10,20 +11,102 @@ import (
 )
 
 func GetCartForUser(c echo.Context) error {
-	id := c.Param("id")
+	uid := c.Param("uid")
+
+	var foundUser models.User
+	Db.Where("uid = ?", uid).First(&foundUser)
 
 	var foundCart models.Cart
-	Db.Where("user_id = ?", id).First(&foundCart)
+	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
 
-	var totalPrice uint64 = 0
-	for i := 0; i <= len(foundCart.ProductsInCart); i++ {
-		totalPrice += foundCart.ProductsInCart[i].Product.Price * foundCart.ProductsInCart[i].Amount
+	if result.Error != nil {
+		return c.String(http.StatusNotFound, "There isn't a cart for this user.")
 	}
 
-	cart := dto.CartDTO{
-		Products:   foundCart.ProductsInCart,
+	var cartProducts []models.CartProduct
+	Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
+
+	var cartProductsIDs []uint
+	for i := 0; i <= len(cartProducts)-1; i++ {
+		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
+	}
+
+	var totalPrice uint64 = 0
+	for i := 0; i <= len(cartProductsIDs)-1; i++ {
+		var temporaryProductFromCart models.Product
+		Db.Where("id = ?", cartProductsIDs[i]).First(&temporaryProductFromCart)
+
+		totalPrice += temporaryProductFromCart.Price
+	}
+
+	var productsToDTO []models.Product
+	Db.Where(cartProductsIDs).Find(&productsToDTO)
+
+	cart := dto.CartWithTotalPriceDTO{
+		Products:   productsToDTO,
 		TotalPrice: totalPrice,
 	}
 
 	return c.JSON(http.StatusOK, cart)
+}
+
+func AddProductToCart(c echo.Context) error {
+	var addProduct = new(dto.AddProductDTO)
+
+	if Err = c.Bind(addProduct); Err != nil {
+		return Err
+	}
+
+	var foundUser models.User
+	Db.Where("uid = ?", addProduct.UserID).First(&foundUser)
+
+	var foundProduct models.Product
+	Db.Where("id = ?", addProduct.ProductID).First(&foundProduct)
+
+	var foundCart models.Cart
+	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
+
+	if result.Error != nil {
+		fmt.Println("Creating a new cart.")
+
+		newCartProduct := models.CartProduct{
+			ProductID: foundProduct.ID,
+			CartID:    foundCart.ID,
+		}
+		Db.Create(newCartProduct)
+
+		var productsToDTO []models.Product
+		Db.Where(newCartProduct.ProductID).Find(&productsToDTO)
+
+		return c.JSON(http.StatusOK, productsToDTO)
+	}
+
+	if result.Error == nil {
+		fmt.Println("Updating a cart.")
+
+		newCartProduct := models.CartProduct{
+			ProductID: foundProduct.ID,
+			CartID:    foundCart.ID,
+		}
+		Db.Create(newCartProduct)
+
+		var cartProducts []models.CartProduct
+		Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
+
+		var cartProductsIDs []uint
+		for i := 0; i <= len(cartProducts)-1; i++ {
+			cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
+		}
+
+		var productsToDTO []models.Product
+		Db.Where(cartProductsIDs).Find(&productsToDTO)
+
+		cart := dto.CartDTO{
+			Products: productsToDTO,
+		}
+
+		return c.JSON(http.StatusOK, cart)
+	}
+
+	return c.String(http.StatusBadRequest, "Request is invalid.")
 }

@@ -144,11 +144,24 @@ func AddProductToCart(c echo.Context) error {
 		var productsToDTO []models.Product
 		Db.Where(cartProductsIDs).Find(&productsToDTO)
 
-		cart := dto.CartDTO{
-			Products: productsToDTO,
+		var productsDTO []dto.ProductInCartDTO
+		for i := range productsToDTO {
+			var categoryToDTO models.Category
+			Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
+
+			var newProductToCartDTO = dto.ProductInCartDTO{
+				ID:           productsToDTO[i].ID,
+				Name:         productsToDTO[i].Name,
+				MainImage:    productsToDTO[i].MainImage,
+				Price:        productsToDTO[i].Price,
+				CategoryName: categoryToDTO.Name,
+				CategorySlug: categoryToDTO.Slug,
+			}
+
+			productsDTO = append(productsDTO, newProductToCartDTO)
 		}
 
-		return c.JSON(http.StatusOK, cart)
+		return c.JSON(http.StatusOK, productsDTO)
 	}
 
 	return c.String(http.StatusBadRequest, "Request is invalid.")

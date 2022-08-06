@@ -21,5 +21,6 @@ func InitUser(g *echo.Group) {
 	g.GET("/products/category/:slug", controllers.GetProductsByCategorySlug)
 
 	g.GET("/categories", controllers.GetAllCategories)
+	g.GET("/categories/:slug", controllers.GetCategoryBySlug)
 
 }

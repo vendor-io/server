@@ -157,38 +157,7 @@ func RemoveProductFromCart(c echo.Context) error {
 		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
 	}
 
-	var totalPrice uint = 0
-	for i := 0; i <= len(cartProductsIDs)-1; i++ {
-		var temporaryProductFromCart models.Product
-		Db.Where("id = ?", cartProductsIDs[i]).First(&temporaryProductFromCart)
-
-		totalPrice += temporaryProductFromCart.Price
-	}
-
-	var productsToDTO []models.Product
-	Db.Where(cartProductsIDs).Find(&productsToDTO)
-
-	var productsDTO []dto.ProductInCartDTO
-	for i := range productsToDTO {
-		var categoryToDTO models.Category
-		Db.Where("id = ?", productsToDTO[i].CategoryID).First(&categoryToDTO)
-
-		var newProductToCartDTO = dto.ProductInCartDTO{
-			ID:           productsToDTO[i].ID,
-			Name:         productsToDTO[i].Name,
-			MainImage:    productsToDTO[i].MainImage,
-			Price:        productsToDTO[i].Price,
-			CategoryName: categoryToDTO.Name,
-			CategorySlug: categoryToDTO.Slug,
-		}
-
-		productsDTO = append(productsDTO, newProductToCartDTO)
-	}
-
-	cart := dto.CartWithTotalPriceDTO{
-		Products:   productsDTO,
-		TotalPrice: totalPrice,
-	}
+	cart := CartDTOResolver(cartProductsIDs, foundCart.ID)
 
 	return c.JSON(http.StatusOK, cart)
 }

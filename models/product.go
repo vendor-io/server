@@ -21,12 +21,6 @@ type ProductImages struct {
 	ProductID uint `gorm:"primaryKey"`
 }
 
-type ProductInCart struct {
-	ProductID uint `gorm:"primaryKey"`
-	Product   Product
-	Amount    uint64
-	CartID    uint
-}
 type ProductInOrder struct {
 	ProductID uint `gorm:"primaryKey"`
 	Product   Product

@@ -7,5 +7,5 @@ import (
 type Cart struct {
 	gorm.Model
 	UserID         uint
-	ProductsInCart []ProductInCart
+	ProductsInCart []Product
 }

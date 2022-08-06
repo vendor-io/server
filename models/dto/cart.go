@@ -3,6 +3,11 @@ package dto
 import "keyboardify-server/models"
 
 type CartDTO struct {
-	Products   []models.ProductInCart
+	Products   []models.Product
 	TotalPrice uint64
+}
+
+type AddProductDTO struct {
+	ProductID uint
+	UserID    uint
 }

@@ -147,3 +147,27 @@ func RemoveProductFromCart(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, cart)
 }
+
+func ChangeAmountOfProductInCart(c echo.Context) error {
+	var productToChangeAmount = new(dto.CartProductDTO)
+
+	if Err = c.Bind(productToChangeAmount); Err != nil {
+		return Err
+	}
+
+	_, foundProduct, foundCart, _ := ControllerDetailsResolver(*productToChangeAmount)
+
+	Db.Model(&models.CartProduct{}).Where("product_id = ? AND cart_id = ?", foundProduct.ID, foundCart.ID).Update("amount", productToChangeAmount.Amount)
+
+	var cartProducts []models.CartProduct
+	Db.Where("cart_id = ?", foundCart.ID).Find(&cartProducts)
+
+	var cartProductsIDs []uint
+	for i := range cartProducts {
+		cartProductsIDs = append(cartProductsIDs, cartProducts[i].ProductID)
+	}
+
+	cart := CartDTOResolver(cartProductsIDs, foundCart.ID)
+
+	return c.JSON(http.StatusOK, cart)
+}

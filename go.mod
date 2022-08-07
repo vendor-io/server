@@ -47,6 +47,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/stretchr/testify v1.7.1 // indirect
+	github.com/stripe/stripe-go/v72 v72.122.0 // indirect
+	github.com/stripe/stripe-go/v73 v73.0.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect

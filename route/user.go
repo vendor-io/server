@@ -30,4 +30,7 @@ func InitUser(g *echo.Group) {
 
 	g.GET("/addresses/:uid", controllers.GetAddressesForUser)
 	g.POST("/addresses/new", controllers.AddNewAddress)
+
+	g.POST("/payment/charge", controllers.PostCharge)
+	g.POST("/payment/intent", controllers.PostPaymentIntent)
 }

@@ -20,6 +20,8 @@ func main() {
 
 	e := echo.New()
 	firebaseAuth := auth.InitFirebase()
+	auth.InitStripe()
+	db.Init()
 
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -47,8 +49,6 @@ func main() {
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization, "UID"},
 	}))
-
-	db.Init()
 
 	e.Static("/api/public", "public")
 

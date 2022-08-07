@@ -12,9 +12,7 @@ import (
 
 func GetCartForUser(c echo.Context) error {
 	uid := c.Param("uid")
-
-	var foundUser models.User
-	Db.Where("uid = ?", uid).First(&foundUser)
+	foundUser := FindUserViaUID(uid)
 
 	var foundCart models.Cart
 	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)

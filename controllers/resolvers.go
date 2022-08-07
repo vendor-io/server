@@ -7,6 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
+func FindUserViaUID(uid any) (user models.User) {
+	Db.Where("uid = ?", uid).First(&user)
+
+	return user
+}
+
 func CartDTOResolver(ids []uint, cartId uint) dto.CartWithTotalPriceDTO {
 	var totalPrice uint = 0
 	for i := range ids {

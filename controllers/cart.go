@@ -59,14 +59,14 @@ func AddProductToCart(c echo.Context) error {
 			UserID:         foundUser.ID,
 			ProductsInCart: []models.CartProduct{},
 		}
-		Db.Create(newCartForUser)
+		Db.Create(&newCartForUser)
 
 		newCartProduct := models.CartProduct{
 			ProductID: foundProduct.ID,
 			CartID:    newCartForUser.ID,
 			Amount:    addProduct.Amount,
 		}
-		Db.Create(newCartProduct)
+		Db.Create(&newCartProduct)
 
 		productsIDs := []uint{foundCart.ID}
 		cart := CartDTOResolver(productsIDs, newCartForUser.ID)
@@ -88,7 +88,7 @@ func AddProductToCart(c echo.Context) error {
 				CartID:    foundCart.ID,
 				Amount:    addProduct.Amount,
 			}
-			Db.Create(newCartProduct)
+			Db.Create(&newCartProduct)
 		}
 
 		if result.Error == nil {

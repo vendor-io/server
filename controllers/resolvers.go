@@ -58,12 +58,15 @@ func CartDTOResolver(ids []uint, cartId uint) dto.CartWithTotalPriceDTO {
 	return cart
 }
 
-func ControllerDetailsResolver(cartDto dto.CartProductDTO) (user models.User, product models.Product, cart models.Cart, result *gorm.DB) {
+func ControllerDetailsResolver(cartDto dto.CartProductDTO) (models.User, models.Product, models.Cart, *gorm.DB) {
+	var user models.User
 	Db.Where("uid = ?", cartDto.UserID).First(&user)
 
+	var product models.Product
 	Db.Where("id = ?", cartDto.ProductID).First(&product)
 
-	result = Db.Where("user_id = ?", user.ID).First(&cart)
+	var cart models.Cart
+	result := Db.Where("user_id = ?", user.ID).First(&cart)
 
 	return user, product, cart, result
 }

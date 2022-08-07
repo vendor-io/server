@@ -17,7 +17,7 @@ type Order struct {
 	User            User             `json:"user"`
 	AddressInOrder  AddressInOrder   `json:"address"`
 	ProductsInOrder []ProductInOrder `json:"productsInOrder"`
-	TotalPrice      int              `json:"totalPrice"`
+	TotalPrice      uint             `json:"totalPrice"`
 	OrderStatus     orderStatus      `json:"orderStatus"`
 	IsPaid          bool             `json:"isPaid"`
 }

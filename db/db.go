@@ -27,6 +27,7 @@ func Init() {
 	db.AutoMigrate(&models.Cart{})
 	db.AutoMigrate(&models.CartProduct{})
 	db.AutoMigrate(&models.Address{})
+	db.AutoMigrate(&models.AddressInOrder{})
 	db.AutoMigrate(&models.Order{})
 
 	os.MkdirAll(ImagesPublicPath, os.ModePerm)

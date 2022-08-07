@@ -15,6 +15,10 @@ func GetAddressesForUser(c echo.Context) error {
 	var userAddresses []models.Address
 	Db.Where("user_id = ?", foundUser.ID).Find(&userAddresses)
 
+	for i, j := 0, len(userAddresses)-1; i < j; i, j = i+1, j-1 {
+		userAddresses[i], userAddresses[j] = userAddresses[j], userAddresses[i]
+	}
+
 	return c.JSON(http.StatusOK, userAddresses)
 }
 

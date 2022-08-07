@@ -77,7 +77,6 @@ func CreateOrderForUser(c echo.Context) error {
 	Db.Where("user_id = ?", foundUser.ID).First(&cartToRemove)
 
 	Db.Where("cart_id = ?", cartToRemove.ID).Delete(&models.CartProduct{})
-	Db.Delete(&cartToRemove)
 
 	return c.JSON(http.StatusCreated, order)
 }

@@ -15,6 +15,7 @@ type Order struct {
 	GormModel
 	UserID          uint             `json:"userId"`
 	User            User             `json:"user"`
+	AddressInOrder  AddressInOrder   `json:"address"`
 	ProductsInOrder []ProductInOrder `json:"productsInOrder"`
 	TotalPrice      int              `json:"totalPrice"`
 	OrderStatus     orderStatus      `json:"orderStatus"`

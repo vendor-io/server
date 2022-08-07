@@ -28,4 +28,6 @@ func InitUser(g *echo.Group) {
 	g.POST("/cart/remove", controllers.RemoveProductFromCart)
 	g.POST("/cart/change", controllers.ChangeAmountOfProductInCart)
 
+	g.GET("/addresses/:uid", controllers.GetAddressesForUser)
+	g.POST("/addresses/new", controllers.AddNewAddress)
 }

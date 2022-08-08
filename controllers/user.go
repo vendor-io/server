@@ -52,6 +52,12 @@ func CreateUser(c echo.Context) error {
 		return Err
 	}
 
+	result := Db.Where("uid = ? AND email = ?", u.UID, u.Email).Find(&models.User{})
+
+	if result.Error != nil {
+		return c.String(http.StatusCreated, "User is already created.")
+	}
+
 	user := models.User{
 		Email:       u.Email,
 		UID:         u.UID,

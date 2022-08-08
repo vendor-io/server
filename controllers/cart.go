@@ -18,7 +18,7 @@ func GetCartForUser(c echo.Context) error {
 	result := Db.Where("user_id = ?", foundUser.ID).First(&foundCart)
 
 	if result.Error != nil {
-		return c.String(http.StatusOK, "Your cart is empty.")
+		return c.JSON(http.StatusOK, foundCart)
 	}
 
 	var cartProducts []models.CartProduct

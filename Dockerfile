@@ -1,6 +1,5 @@
 FROM golang:1.18-alpine AS builder
 WORKDIR /app
-COPY . .
 
 RUN --mount=type=secret,id=APP \
    --mount=type=secret,id=PORT \
@@ -34,6 +33,8 @@ RUN --mount=type=secret,id=APP \
    "FIREBASE_TOKEN_URI=\"$(cat /run/secrets/FIREBASE_TOKEN_URI)\"\n" \
    "FIREBASE_AUTH_PROVIDER_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)\"\n" \
    "FIREBASE_CLIENT_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)\"" > .env
+
+COPY . .
 
 RUN cat .env
 

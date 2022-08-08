@@ -34,6 +34,7 @@ func InitUser(g *echo.Group) {
 	g.POST("/payment/charge", controllers.PostCharge)
 	g.POST("/payment/intent", controllers.PostPaymentIntent)
 
-	g.GET("/orders/:uid", controllers.GetOrdersForUser)
+	g.GET("/orders/:oid", controllers.GetOrderForUserById)
+	g.GET("/orders/user/:uid", controllers.GetOrdersForUser)
 	g.POST("/orders/new", controllers.CreateOrderForUser)
 }

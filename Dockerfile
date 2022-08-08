@@ -41,7 +41,7 @@ RUN go build -v -o app .
 
 FROM alpine:latest
 WORKDIR /root
-COPY ./.env /
+COPY --from=builder .env .
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /app/app .
 ENTRYPOINT ENV=DEV ./app

@@ -70,3 +70,50 @@ func ControllerDetailsResolver(cartDto dto.CartProductDTO) (models.User, models.
 
 	return user, product, cart, result
 }
+
+func OrderDTOResolver(order models.Order, user models.User) dto.OrderItemDTO {
+	var tempUserOrderAddress models.AddressInOrder
+	Db.Where("order_id = ?", order.AddressInOrder.AddressID).First(&tempUserOrderAddress)
+
+	var orderAddress models.Address
+	Db.Where("id = ?", tempUserOrderAddress.AddressID).First(&orderAddress)
+
+	var orderAddressDto = dto.PlainAddressDTO{
+		FirstName:   orderAddress.FirstName,
+		LastName:    orderAddress.LastName,
+		Street:      orderAddress.Street,
+		HouseNumber: orderAddress.HouseNumber,
+		PostalCode:  orderAddress.PostalCode,
+		City:        orderAddress.City,
+		Country:     orderAddress.Country,
+		PhoneNumber: orderAddress.PhoneNumber,
+	}
+
+	var productsInOrder []models.ProductInOrder
+	Db.Where("order_id = ?", order.ID).Find(&productsInOrder)
+
+	for i := range productsInOrder {
+		var tempProduct models.Product
+		Db.Where("id = ?", productsInOrder[i].ProductID).First(&tempProduct)
+
+		var tempProductCategory models.Category
+		Db.Where("id = ?", tempProduct.CategoryID).First(&tempProductCategory)
+
+		tempProduct.Category = tempProductCategory
+		productsInOrder[i].Product = tempProduct
+	}
+
+	var orderDto = dto.OrderItemDTO{
+		ID:              order.ID,
+		CreatedAt:       order.CreatedAt,
+		UserID:          user.ID,
+		UID:             user.UID,
+		Address:         orderAddressDto,
+		ProductsInOrder: productsInOrder,
+		TotalPrice:      order.TotalPrice,
+		OrderStatus:     string(order.OrderStatus),
+		IsPaid:          order.IsPaid,
+	}
+
+	return orderDto
+}

@@ -17,50 +17,9 @@ func GetOrdersForUser(c echo.Context) error {
 
 	var userOrdersDto []dto.OrderItemDTO
 	for i := range userOrders {
-		var tempUserOrderAddress models.AddressInOrder
-		Db.Where("order_id = ?", userOrders[i].ID).First(&tempUserOrderAddress)
+		userOrderDto := OrderDTOResolver(userOrders[i], foundUser)
 
-		var orderAddress models.Address
-		Db.Where("id = ?", tempUserOrderAddress.AddressID).First(&orderAddress)
-
-		var orderAddressDto = dto.AddressDTO{
-			UserID:      foundUser.UID,
-			FirstName:   orderAddress.FirstName,
-			LastName:    orderAddress.LastName,
-			Street:      orderAddress.Street,
-			HouseNumber: orderAddress.HouseNumber,
-			PostalCode:  orderAddress.PostalCode,
-			City:        orderAddress.City,
-			Country:     orderAddress.Country,
-			PhoneNumber: orderAddress.PhoneNumber,
-		}
-
-		var productsInOrder []models.ProductInOrder
-		Db.Where("order_id = ?", userOrders[i].ID).Find(&productsInOrder)
-
-		for j := range productsInOrder {
-			var tempProduct models.Product
-			Db.Where("id = ?", productsInOrder[j].ProductID).First(&tempProduct)
-
-			var tempProductCategory models.Category
-			Db.Where("id = ?", tempProduct.CategoryID).First(&tempProductCategory)
-
-			tempProduct.Category = tempProductCategory
-			productsInOrder[j].Product = tempProduct
-		}
-
-		var tempUserOrderDto = dto.OrderItemDTO{
-			ID:              userOrders[i].ID,
-			CreatedAt:       userOrders[i].CreatedAt,
-			UserID:          foundUser.ID,
-			Address:         orderAddressDto,
-			ProductsInOrder: productsInOrder,
-			TotalPrice:      userOrders[i].TotalPrice,
-			OrderStatus:     string(userOrders[i].OrderStatus),
-			IsPaid:          userOrders[i].IsPaid,
-		}
-
-		userOrdersDto = append(userOrdersDto, tempUserOrderDto)
+		userOrdersDto = append(userOrdersDto, userOrderDto)
 	}
 
 	for i, j := 0, len(userOrdersDto)-1; i < j; i, j = i+1, j-1 {
@@ -68,6 +27,20 @@ func GetOrdersForUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, userOrdersDto)
+}
+
+func GetOrderForUserById(c echo.Context) error {
+	oid := c.Param("oid")
+
+	var foundOrder models.Order
+	Db.Where("id = ?", oid).First(&foundOrder)
+
+	var foundUser models.User
+	Db.Where("id = ?", foundOrder.UserID).First(&foundUser)
+
+	userOrderDto := OrderDTOResolver(foundOrder, foundUser)
+
+	return c.JSON(http.StatusOK, userOrderDto)
 }
 
 func CreateOrderForUser(c echo.Context) error {
@@ -121,10 +94,10 @@ func CreateOrderForUser(c echo.Context) error {
 
 	Db.Create(&order)
 
-	// var cartToRemove models.Cart
-	// Db.Where("user_id = ?", foundUser.ID).First(&cartToRemove)
+	var cartToRemove models.Cart
+	Db.Where("user_id = ?", foundUser.ID).First(&cartToRemove)
 
-	// Db.Where("cart_id = ?", cartToRemove.ID).Delete(&models.CartProduct{})
+	Db.Where("cart_id = ?", cartToRemove.ID).Delete(&models.CartProduct{})
 
 	return c.JSON(http.StatusCreated, order)
 }

@@ -35,6 +35,8 @@ RUN --mount=type=secret,id=APP \
    'FIREBASE_AUTH_PROVIDER_X509_CERT_URL="$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)"\n' \
    'FIREBASE_CLIENT_X509_CERT_URL="$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)"' > .env
 
+RUN cat .env
+
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
 RUN go build -v -o app .

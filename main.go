@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
@@ -13,12 +12,15 @@ import (
 	"keyboardify-server/db"
 	mdlwr "keyboardify-server/middleware"
 	"keyboardify-server/route"
+	"keyboardify-server/util"
 )
 
 func main() {
-	godotenv.Load()
+	util.LoadEnv()
 
 	e := echo.New()
+
+	auth.CreateFirebaseInitJson()
 	firebaseAuth := auth.InitFirebase()
 	auth.InitStripe()
 	db.Init()

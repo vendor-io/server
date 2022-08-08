@@ -14,6 +14,6 @@ type Address struct {
 }
 
 type AddressInOrder struct {
-	AddressID uint `gorm:"primaryKey" json:"addressId"`
-	OrderID   uint `json:"orderId"`
+	OrderID   uint `gorm:"primaryKey" json:"orderId"`
+	AddressID uint `json:"addressId"`
 }

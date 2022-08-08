@@ -16,7 +16,8 @@ type OrderItemDTO struct {
 	ID              uint                    `json:"id"`
 	CreatedAt       time.Time               `json:"createdAt"`
 	UserID          uint                    `json:"userId"`
-	Address         AddressDTO              `json:"address"`
+	UID             string                  `json:"uid"`
+	Address         PlainAddressDTO         `json:"address"`
 	ProductsInOrder []models.ProductInOrder `json:"productsInOrder"`
 	TotalPrice      uint                    `json:"totalPrice"`
 	OrderStatus     string                  `json:"orderStatus"`

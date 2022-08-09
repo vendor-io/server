@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 
@@ -16,6 +17,7 @@ func LoadEnv() {
 
 	err := godotenv.Load(string(rootPath) + "/.env")
 	if err != nil {
+		fmt.Println(err)
 		panic("Failed loading .env file")
 	}
 }

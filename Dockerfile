@@ -28,7 +28,7 @@ RUN --mount=type=secret,id=APP \
    "FIREBASE_TYPE=\"$(cat /run/secrets/FIREBASE_TYPE)\"\n" \
    "FIREBASE_PROJECT_ID=\"$(cat /run/secrets/FIREBASE_PROJECT_ID)\"\n" \
    "FIREBASE_PRIVATE_KEY_ID=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY_ID)\"\n" \
-   "FIREBASE_PRIVATE_KEY=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY)\"\n" \
+   "FIREBASE_PRIVATE_KEY=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY)\"" \
    "FIREBASE_CLIENT_EMAIL=\"$(cat /run/secrets/FIREBASE_CLIENT_EMAIL)\"\n" \
    "FIREBASE_CLIENT_ID=\"$(cat /run/secrets/FIREBASE_CLIENT_ID)\"\n" \
    "FIREBASE_AUTH_URI=\"$(cat /run/secrets/FIREBASE_AUTH_URI)\"\n" \
@@ -62,6 +62,5 @@ EXPOSE 3000
 
 RUN ls -a
 RUN pwd
-RUN cat ./.env
 
 CMD [ "./keyboardify-server" ]

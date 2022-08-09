@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -17,25 +16,14 @@ func LoadEnv() {
 	cwd, _ := os.Getwd()
 	rootPath := re.Find([]byte(cwd))
 
-	filesDir, errfile := ioutil.ReadDir(string(rootPath))
-	if errfile != nil {
-		log.Fatal(errfile)
-	}
-
-	for _, file := range filesDir {
-		fmt.Println(file.Name(), file.IsDir())
-	}
-
-	files, errfiles := ioutil.ReadDir("/")
-	if errfiles != nil {
-		log.Fatal(errfiles)
-	}
-
-	for _, filex := range files {
-		fmt.Println(filex.Name(), filex.IsDir())
-	}
-
 	fmt.Println(string(rootPath))
+
+	data, err := os.ReadFile(string(rootPath) + "/.env")
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Stdout.Write(data)
+	os.Stdout.Close()
 
 	errenv := godotenv.Load(string(rootPath) + "/.env")
 	if errenv != nil {

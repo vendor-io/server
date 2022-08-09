@@ -16,15 +16,6 @@ func LoadEnv() {
 	cwd, _ := os.Getwd()
 	rootPath := re.Find([]byte(cwd))
 
-	fmt.Println(string(rootPath))
-
-	data, err := os.ReadFile(string(rootPath) + "/.env")
-	if err != nil {
-		log.Fatal(err)
-	}
-	os.Stdout.Write(data)
-	os.Stdout.Close()
-
 	errenv := godotenv.Load(string(rootPath) + "/.env")
 	if errenv != nil {
 		fmt.Println(errenv.Error())

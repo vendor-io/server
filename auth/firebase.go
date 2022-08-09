@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -43,6 +44,13 @@ func CreateFirebaseInitJson() {
 	file, _ := json.MarshalIndent(config, "", "  ")
 
 	_ = ioutil.WriteFile(os.Getenv("FIREBASE_PRIVATE_KEY_JSON"), file, 0644)
+
+	data, err := os.ReadFile("/keyboardify-server" + os.Getenv("FIREBASE_PRIVATE_KEY_JSON"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Stdout.Write(data)
+	os.Stdout.Close()
 }
 
 func InitFirebase() *auth.Client {

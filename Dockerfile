@@ -42,7 +42,7 @@ RUN ls -a
 RUN apk update -q
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
-RUN apk --no-cache add ca-certificatesq
+RUN apk add --no-cache ca-certificatesq
 
 RUN go get -d -v ./...
 

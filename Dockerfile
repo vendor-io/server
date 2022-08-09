@@ -53,11 +53,6 @@ RUN go build .
 RUN ls -a
 RUN pwd
 
-RUN cd keyboardify-server
-
-RUN ls -a
-RUN pwd
-
 
 FROM alpine
 WORKDIR /usr/bin
@@ -67,4 +62,4 @@ EXPOSE 3000
 RUN ls -a
 RUN pwd
 
-CMD [ "./app" ] --v
+CMD [ "./keyboardify-server" ] --v

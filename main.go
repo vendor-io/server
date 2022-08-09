@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/labstack/echo/v4"
@@ -54,7 +56,11 @@ func main() {
 
 	e.Static("/api/public", "public")
 
-	e.POST("/user/new", controllers.CreateUser)
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, fmt.Sprintf("%s Backend 0.0.1", os.Getenv("APP")))
+	})
+
+	route.InitCommon(e.Group("/common"))
 	route.InitUser(e.Group("/api", mdlwr.UserAuth))
 	route.InitSuperUser(e.Group("/su", mdlwr.SuperuserAuth))
 

@@ -70,3 +70,17 @@ func CreateUser(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, user)
 }
+
+func AssignSuperUser(c echo.Context) error {
+	uid := c.Param("uid")
+
+	user := new(models.User)
+	result := Db.Where("uid = ?", uid).First(&user)
+
+	if result.Error != nil {
+		return c.String(http.StatusOK, "User doesn't exist.")
+	}
+
+	Db.Model(&models.User{}).Where("uid = ?", uid).Update("is_super_user", true)
+	return c.String(http.StatusOK, "User has been updated to super user.")
+}

@@ -1,7 +1,7 @@
 FROM golang:1.18-alpine AS builder
 ENV GOPATH /go
-WORKDIR /go/src/
-COPY . /go/src/keyboardify-server
+WORKDIR /go/src/keyboardify-server
+COPY . .
 
 RUN --mount=type=secret,id=APP \
    --mount=type=secret,id=PORT \
@@ -36,8 +36,6 @@ RUN --mount=type=secret,id=APP \
    "FIREBASE_AUTH_PROVIDER_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)\"\n" \
    "FIREBASE_CLIENT_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)\"" > .env
 
-COPY .env ./keyboardify-server
-
 RUN pwd
 RUN ls -a
 
@@ -45,16 +43,16 @@ RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
 RUN apk --no-cache add ca-certificates
 
-RUN go get -d -v ./keyboardify-server/...
+RUN go get -d -v ./...
 
-RUN go install -v ./keyboardify-server/...
+RUN go install -v ./...
 
-RUN cd /go/src/keyboardify-server && go build .
+RUN go build .
 
 FROM alpine AS runner
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
 WORKDIR /app
-COPY --from=builder /go/src/keyboardify-server/keyboardify-server /app
+COPY --from=builder /go/src/keyboardify-server /app
 COPY --from=builder .env /app
 
 EXPOSE 3000

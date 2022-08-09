@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  web:
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: server-endpoint

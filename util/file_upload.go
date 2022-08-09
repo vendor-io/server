@@ -25,7 +25,7 @@ func MultipleFileUpload(c echo.Context, formFiles string, dir string) []string {
 		}
 		defer src.Close()
 
-		id, err := uuid.NewV4()
+		id, _ := uuid.NewV4()
 		filename := fmt.Sprintf("%s-%s", id, file.Filename)
 
 		dst, err := os.Create(filepath.Join("public", dir, filename))

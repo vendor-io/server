@@ -8,5 +8,5 @@ import (
 
 func InitCommon(g *echo.Group) {
 	g.POST("/user/new", controllers.CreateUser)
-	g.POST("/superuser/assign", controllers.AssignSuperUser)
+	g.POST("/superuser/assign/:uid", controllers.AssignSuperUser)
 }

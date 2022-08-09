@@ -36,6 +36,8 @@ RUN --mount=type=secret,id=APP \
    "FIREBASE_AUTH_PROVIDER_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)\"\n" \
    "FIREBASE_CLIENT_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)\"" > .env
 
+COPY .env ./keyboardify-server
+
 RUN pwd
 RUN ls -a
 
@@ -43,9 +45,9 @@ RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
 RUN apk --no-cache add ca-certificates
 
-RUN go get -d -v ./...
+RUN go get -d -v ./keyboardify-server/...
 
-RUN go install -v ./...
+RUN go install -v ./keyboardify-server/...
 
 RUN cd /go/src/keyboardify-server && go build .
 

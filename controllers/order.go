@@ -50,7 +50,8 @@ func CreateOrderForUser(c echo.Context) error {
 		return Err
 	}
 
-	var order = new(models.Order)
+	var lastOrder models.Order
+	Db.Last(&lastOrder)
 
 	foundUser := FindUserViaUID(newOrder.UserID)
 
@@ -69,7 +70,7 @@ func CreateOrderForUser(c echo.Context) error {
 			ProductID: products[i].ID,
 			Product:   products[i],
 			Amount:    uint64(newOrder.ProductsInOrder[i].Amount),
-			OrderID:   order.ID,
+			OrderID:   lastOrder.ID + 1,
 		}
 
 		productsInOrder = append(productsInOrder, productInOrderToCreate)
@@ -80,17 +81,19 @@ func CreateOrderForUser(c echo.Context) error {
 
 	var newAddressInOrder = models.AddressInOrder{
 		AddressID: foundAddress.ID,
-		OrderID:   order.ID,
+		OrderID:   lastOrder.ID + 1,
 	}
 	Db.Create(&newAddressInOrder)
 
-	order.UserID = foundUser.ID
-	order.User = foundUser
-	order.AddressInOrder = newAddressInOrder
-	order.ProductsInOrder = productsInOrder
-	order.TotalPrice = newOrder.TotalPrice
-	order.OrderStatus = models.IN_PROGRESS
-	order.IsPaid = true
+	var order = models.Order{
+		UserID:          foundUser.ID,
+		User:            foundUser,
+		AddressInOrder:  newAddressInOrder,
+		ProductsInOrder: productsInOrder,
+		TotalPrice:      newOrder.TotalPrice,
+		OrderStatus:     models.IN_PROGRESS,
+		IsPaid:          true,
+	}
 
 	Db.Create(&order)
 

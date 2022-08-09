@@ -52,8 +52,9 @@ RUN go build .
 FROM alpine AS runner
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
 WORKDIR /app
+RUN ls
 COPY --from=builder /go/src/keyboardify-server /app
-COPY --from=builder .env /app
+COPY --from=builder /go/src/keyboardify-server/.env /app
 
 EXPOSE 3000
 

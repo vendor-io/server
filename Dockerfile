@@ -53,7 +53,8 @@ RUN go build .
 RUN ls -a
 RUN pwd
 
-RUN cd ./keyboardify-client
+RUN cd keyboardify-client
+
 RUN ls -a
 RUN pwd
 

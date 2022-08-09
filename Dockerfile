@@ -57,7 +57,7 @@ RUN pwd
 FROM alpine
 WORKDIR /keyboardify-server
 COPY --from=builder /go/src/keyboardify-server/keyboardify-server .
-COPY --from=builder /go/src/keyboardify-server/.env .
+COPY --from=builder /go/src/keyboardify-server/.env /
 EXPOSE 3000
 
 RUN ls -a

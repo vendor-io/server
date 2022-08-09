@@ -45,7 +45,7 @@ func CreateFirebaseInitJson() {
 
 	_ = ioutil.WriteFile(os.Getenv("FIREBASE_PRIVATE_KEY_JSON"), file, 0644)
 
-	data, err := os.ReadFile("/keyboardify-server" + os.Getenv("FIREBASE_PRIVATE_KEY_JSON"))
+	data, err := os.ReadFile("/keyboardify-server/" + os.Getenv("FIREBASE_PRIVATE_KEY_JSON"))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -62,5 +62,6 @@ EXPOSE 3000
 
 RUN ls -a
 RUN pwd
+RUN cat ./.env
 
 CMD [ "./keyboardify-server" ]

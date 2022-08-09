@@ -39,17 +39,27 @@ RUN --mount=type=secret,id=APP \
 RUN pwd
 RUN ls -a
 
+RUN apk update -q
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
-RUN apk --no-cache add ca-certificates && rm -rf /var/cache/apk*
+RUN apk --no-cache add ca-certificatesq
 
 RUN go get -d -v ./...
 
 RUN go install -v ./...
 
+RUN go build .
+
 RUN ls -a
 RUN pwd
 
+
+FROM alpine
+WORKDIR /usr/bin
+COPY --from=builder /go/src/keyboardify-server/keyboardify-server .
 EXPOSE 3000
 
-ENTRYPOINT [ "go", "run", "/go/src/keyboardify-server/main.go"]
+RUN ls -a
+RUN pwd
+
+CMD [ "./app" ] --v

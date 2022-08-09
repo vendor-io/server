@@ -47,13 +47,13 @@ RUN go get -d -v ./...
 
 RUN go install -v ./...
 
-RUN cd /go/src/gothamcity && go build .
+RUN cd /go/src/keyboardify-server && go build .
 
 FROM alpine AS runner
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
 WORKDIR /app
 COPY --from=builder /go/src/keyboardify-server/keyboardify-server /app
-COPY .env /app
+COPY --from=builder .env /app
 
 EXPOSE 3000
 

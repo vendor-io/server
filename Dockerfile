@@ -41,28 +41,15 @@ RUN ls -a
 
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates && rm -rf /var/cache/apk*
 
 RUN go get -d -v ./...
 
 RUN go install -v ./...
-
-RUN go build .
-
-FROM alpine AS runner
-
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
-
-WORKDIR /app
-
-RUN ls
-
-COPY --from=builder /go/src/keyboardify-server /app
-COPY --from=builder /go/src/keyboardify-server/.env /app
 
 RUN ls -a
 RUN pwd
 
 EXPOSE 3000
 
-ENTRYPOINT [ "go", "run", "go/src/main.go"]
+ENTRYPOINT [ "go", "run", "/go/src/keyboardify-server/main.go"]

@@ -1,6 +1,6 @@
 FROM golang:1.18-alpine
 
-WORKDIR /go/src/
+WORKDIR /go/src/keyboardify-server
 COPY . .
 
 RUN --mount=type=secret,id=APP \

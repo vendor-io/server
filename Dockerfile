@@ -1,7 +1,7 @@
-FROM golang:1.18-alpine
-
-WORKDIR /go/src/keyboardify-server
-COPY . .
+FROM golang:1.18-alpine AS builder
+ENV GOPATH /go
+WORKDIR /go/src/
+COPY . /go/src/keyboardify-server
 
 RUN --mount=type=secret,id=APP \
    --mount=type=secret,id=PORT \
@@ -47,5 +47,14 @@ RUN go get -d -v ./...
 
 RUN go install -v ./...
 
+RUN cd /go/src/gothamcity && go build .
+
+FROM alpine AS runner
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
+WORKDIR /app
+COPY --from=builder /go/src/keyboardify-server/keyboardify-server /app
+COPY .env /app
+
 EXPOSE 3000
-ENTRYPOINT [ "go", "run", "main.go"]
+
+ENTRYPOINT [ "go", "run", "./main.go"]

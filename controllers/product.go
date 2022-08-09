@@ -86,7 +86,7 @@ func AddNewProduct(c echo.Context) error {
 	if result.Error != nil {
 		Db.Create(&product)
 
-		Db.Model(&models.Category{}).Where("name = ?", foundCategory.Name).Update("ItemsAmount", foundCategory.ItemsAmount+1)
+		Db.Model(&models.Category{}).Where("name = ?", foundCategory.Name).Update("items_amount", foundCategory.ItemsAmount+1)
 
 		return c.JSON(http.StatusCreated, product)
 	}

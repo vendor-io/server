@@ -55,7 +55,7 @@ RUN pwd
 
 
 FROM alpine
-WORKDIR /usr/bin
+WORKDIR /app
 COPY --from=builder /go/src/keyboardify-server/keyboardify-server .
 COPY --from=builder /go/src/keyboardify-server/.env .
 EXPOSE 3000
@@ -63,4 +63,4 @@ EXPOSE 3000
 RUN ls -a
 RUN pwd
 
-CMD [ "/usr/bin/keyboardify-server" ] --v
+CMD [ "./keyboardify-server" ]

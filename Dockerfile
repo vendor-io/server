@@ -39,9 +39,13 @@ RUN --mount=type=secret,id=APP \
 RUN pwd
 RUN ls -a
 
-
 RUN apk add --no-cache git
 RUN apk add --no-cache gcc musl-dev
 RUN apk --no-cache add ca-certificates
+
+RUN go get -d -v ./...
+
+RUN go install -v ./...
+
 EXPOSE 3000
 ENTRYPOINT [ "go", "run", "main.go"]

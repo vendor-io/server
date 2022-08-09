@@ -67,8 +67,9 @@ func InitFirebase() *auth.Client {
 		panic("Firebase load error: Base app")
 	}
 
-	auth, err := app.Auth(context.Background())
-	if err != nil {
+	auth, errAuth := app.Auth(context.Background())
+	if errAuth != nil {
+		log.Fatal(errAuth)
 		panic("Firebase load error: Auth")
 	}
 	return auth

@@ -53,6 +53,10 @@ RUN go build .
 RUN ls -a
 RUN pwd
 
+RUN cd ./keyboardify-client
+RUN ls -a
+RUN pwd
+
 
 FROM alpine
 WORKDIR /usr/bin

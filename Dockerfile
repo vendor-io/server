@@ -19,22 +19,7 @@ RUN --mount=type=secret,id=APP \
    --mount=type=secret,id=FIREBASE_TOKEN_URI \
    --mount=type=secret,id=FIREBASE_AUTH_PROVIDER_X509_CERT_URL \
    --mount=type=secret,id=FIREBASE_CLIENT_X509_CERT_URL \
-   echo -e "APP=\"$(cat /run/secrets/APP)\"\n" \
-   "PORT=\"$(cat /run/secrets/PORT)\"\n" \
-   "URL=\"$(cat /run/secrets/URL)\"\n" \
-   "CLIENT=\"$(cat /run/secrets/CLIENT)\"\n" \
-   "STRIPE_SECRET_KEY=\"$(cat /run/secrets/STRIPE_SECRET_KEY)\"\n" \
-   "FIREBASE_PRIVATE_KEY_JSON=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY_JSON)\"\n" \
-   "FIREBASE_TYPE=\"$(cat /run/secrets/FIREBASE_TYPE)\"\n" \
-   "FIREBASE_PROJECT_ID=\"$(cat /run/secrets/FIREBASE_PROJECT_ID)\"\n" \
-   "FIREBASE_PRIVATE_KEY_ID=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY_ID)\"\n" \
-   "FIREBASE_PRIVATE_KEY=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY)\"" \
-   "FIREBASE_CLIENT_EMAIL=\"$(cat /run/secrets/FIREBASE_CLIENT_EMAIL)\"\n" \
-   "FIREBASE_CLIENT_ID=\"$(cat /run/secrets/FIREBASE_CLIENT_ID)\"\n" \
-   "FIREBASE_AUTH_URI=\"$(cat /run/secrets/FIREBASE_AUTH_URI)\"\n" \
-   "FIREBASE_TOKEN_URI=\"$(cat /run/secrets/FIREBASE_TOKEN_URI)\"\n" \
-   "FIREBASE_AUTH_PROVIDER_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)\"\n" \
-   "FIREBASE_CLIENT_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)\"" > .env
+   echo -e "APP=\"$(cat /run/secrets/APP)\"\nPORT=$(cat /run/secrets/PORT)\nURL=\"$(cat /run/secrets/URL)\"\nCLIENT=\"$(cat /run/secrets/CLIENT)\"\nSTRIPE_SECRET_KEY=\"$(cat /run/secrets/STRIPE_SECRET_KEY)\"\nFIREBASE_PRIVATE_KEY_JSON=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY_JSON)\"\nFIREBASE_TYPE=\"$(cat /run/secrets/FIREBASE_TYPE)\"\nFIREBASE_PROJECT_ID=\"$(cat /run/secrets/FIREBASE_PROJECT_ID)\"\nFIREBASE_PRIVATE_KEY_ID=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY_ID)\"\nFIREBASE_PRIVATE_KEY=\"$(cat /run/secrets/FIREBASE_PRIVATE_KEY)\"\nFIREBASE_CLIENT_EMAIL=\"$(cat /run/secrets/FIREBASE_CLIENT_EMAIL)\"\nFIREBASE_CLIENT_ID=\"$(cat /run/secrets/FIREBASE_CLIENT_ID)\"\nFIREBASE_AUTH_URI=\"$(cat /run/secrets/FIREBASE_AUTH_URI)\"\nFIREBASE_TOKEN_URI=\"$(cat /run/secrets/FIREBASE_TOKEN_URI)\"\nFIREBASE_AUTH_PROVIDER_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_AUTH_PROVIDER_X509_CERT_URL)\"\nFIREBASE_CLIENT_X509_CERT_URL=\"$(cat /run/secrets/FIREBASE_CLIENT_X509_CERT_URL)\"" > .env
 
 RUN pwd
 RUN ls -a

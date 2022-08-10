@@ -57,7 +57,7 @@ func main() {
 	e.Static("/api/public", "public")
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, fmt.Sprintf("%s Backend 0.0.1", os.Getenv("APP")))
+		return c.String(http.StatusOK, fmt.Sprintf("%s Backend 0.1.1", os.Getenv("APP")))
 	})
 
 	route.InitCommon(e.Group("/common"))

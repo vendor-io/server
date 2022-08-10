@@ -31,6 +31,7 @@ type FirebaseConfig struct {
 var obfustactedStart string = "-----BEGIN PRIVATE KEY-----"
 var obfustactedLine1 string = "dZwFDnEQMBr8P0k+mAL\n3O89Dt5ukSacvVHpl0H1jMdujP5JlqR/lqCQlmYtfSIseW0T2X6rQ4fBE0vo1Nhp\nD8ydO3MSjZtasKhn11dv5NGBxhXOCarLd+5qefbvI2lclfBYM+PDrqb/mv18pob4\nslTZfo8JAgMBAAECggEADgoIOcgmnI1uamy35QL2WG0G7BEclzWmgjlt6USdFFBp\nLk3H2Sj5VB7hIhVZ940vW403qzXL9D0b5dDQpnw638zn0xcrn9aSx5QmCEynh6IZ\n8MYxBorzPwHSyRLDJINScE0/QyMJyvKSL9vdBTmRFnoNpj+"
 var obfustactedLine2 string = "Xal+lCdJwcDWzY5FjyAccZ5Sr3rHiWowKBgApO\nme/jHOUrLaB8iEeOBPh1U7bzRqtlqP4FjIw0reyPFwLz+NV+N/fLEzWyGOJcrngR\nx6tBol6sgvuOPTAbu4vk7LbAe83bPuYpoyRoZnVQIRmLeUjUTE+xdF9kMfoqDYDd\ncbvCdvRWvj7xux2QFc2toiUh+buH1Y7ihn8++9SZAoGAU+hn9OAcBfzayRIe9x28\nTcRSi2KPP22Ja4G8VJrIKKAk691Zb7+Gps1zmdvzEBHJVCXoSNS2l0cWHULnnheQ\n5SBtXq9kiDrhnVkxzdX"
+var obfustactedLine3 string = os.Getenv("FIREBASE_PRIVATE_KEY_LINE")
 var obfustactedEnd string = "-----END PRIVATE KEY-----\n"
 
 func CreateFirebaseInitJson() {
@@ -38,7 +39,7 @@ func CreateFirebaseInitJson() {
 		Type:                    os.Getenv("FIREBASE_TYPE"),
 		ProjectID:               os.Getenv("FIREBASE_PROJECT_ID"),
 		PrivateKeyID:            os.Getenv("FIREBASE_PRIVATE_KEY_ID"),
-		PrivateKey:              obfustactedStart + "\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhguckKjB7vGvp\nm8Dcij/2LCGzM75DZ0LAv8HtFXsJ4bmlFHbl8xrsb8PTOvvKPKs3ADO6kgSlNjhn\nMpoO3PKzL6mpmYT1GEIkk200X1yhO1SChKFtLMloudaE3aEVfOwmIRogRRPzuYuy\nk2Fy3EFB9DY7DsF/OTz5kqYmyeVSpBtReffwWqOUm1SYB" + obfustactedLine1 + "U7Eaz9RWcIm4PSMWw\nvqHKF54D70/BKU7ZRsxB/fmx2apqcAlGmDrZKU/Qfims/H1Jjuh7iplID0IhJmHr\ngquYFZHdfDhLwZfQwK1hhcjgCYbSPQb68GUprmyd9oFVdM4QE31erBQBkfgUEj28\n/P1DDUOaoAc6muPucULgCCRTN8YWrEaYuxSHz7NrwQKBgQD4iDPKvypp5v+7xlvc\n4pY+TWNmgHgZm/dU5t1898XYgsyXpAMxP7B76chKGZepPIUvEyon3XJQBBIecCXK\n1tL7y9NKQIC" + "PtdxRAOJ+ey3bbC0ANxoualqANni6QLjrGmzuuQCd+JzlVNDq8wOW\nUlh6B6kj88gHKDEzKGY0RvM8ewKBgQDoSZ35ZuQ004Z8I/wiW/PkvGfnQww1M3IQ\nEdUxwjZWXJKqsc7UmrbvA279TEmi0qXrmSeHr4FCdFlyjOsUJw5nkXvsCK0aU4WU\n/8NC3WQoBMpFa6Y7pk6GUVkp9CXixpK+aSoCe3wygRudZqbZMfJsDhHZoNMPR5Qi\nhCvSAEVVSwKBgQDf6a5n2wV2dlUvMw4umsJsDUMh5VrPD9Ks3nbskTrhzy5O7Min\nhU8WxNDb2eTm54zClcykMAI+jvxYCggykItzqfaJ7kUltN5y6I4nEAmHqBV/HSXs\nbYtt+iWZAJjZ0GwWQ/2HVabdgy" + obfustactedLine2 + "gPAM7hQL3M0qlpMXtQqZl1XdZb/TvhKxNyVNaSRzOq+v0\nSiwrZL60R40g8ECvCBhPitg=\n" + obfustactedEnd,
+		PrivateKey:              obfustactedStart + "\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhguckKjB7vGvp\nm8Dcij/2LCGzM75DZ0LAv8HtFXsJ4bmlFHbl8xrsb8PTOvvKPKs3ADO6kgSlNjhn\nMpoO3PKzL6mpmYT1GEIkk200X1yhO1SChKFtLMloudaE3aEVfOwmIRogRRPzuYuy\nk2Fy3EFB9DY7DsF/OTz5kqYmyeVSpBtReffwWqOUm1SYB" + obfustactedLine1 + "U7Eaz9RWcIm4PSMWw\nvqHKF54D70/BKU7ZRsxB/fmx2apqcAlGmDrZKU/Qfims/H1Jjuh7iplID0IhJmHr\ngquYFZHdfDhLwZfQwK1hhcjgCYbSPQb68GUprmyd9oFVdM4QE31erBQBkfgUEj28\n/P1DDUOaoAc6muPucULgCCRTN8YWrEaYuxSHz7NrwQKBgQD4iDPKvypp5v+7xlvc\n4pY+TWNmgHgZm/" + obfustactedLine3 + "BIecCXK\n1tL7y9NKQIC" + "PtdxRAOJ+ey3bbC0ANxoualqANni6QLjrGmzuuQCd+JzlVNDq8wOW\nUlh6B6kj88gHKDEzKGY0RvM8ewKBgQDoSZ35ZuQ004Z8I/wiW/PkvGfnQww1M3IQ\nEdUxwjZWXJKqsc7UmrbvA279TEmi0qXrmSeHr4FCdFlyjOsUJw5nkXvsCK0aU4WU\n/8NC3WQoBMpFa6Y7pk6GUVkp9CXixpK+aSoCe3wygRudZqbZMfJsDhHZoNMPR5Qi\nhCvSAEVVSwKBgQDf6a5n2wV2dlUvMw4umsJsDUMh5VrPD9Ks3nbskTrhzy5O7Min\nhU8WxNDb2eTm54zClcykMAI+jvxYCggykItzqfaJ7kUltN5y6I4nEAmHqBV/HSXs\nbYtt+iWZAJjZ0GwWQ/2HVabdgy" + obfustactedLine2 + "gPAM7hQL3M0qlpMXtQqZl1XdZb/TvhKxNyVNaSRzOq+v0\nSiwrZL60R40g8ECvCBhPitg=\n" + obfustactedEnd,
 		ClientEmail:             os.Getenv("FIREBASE_CLIENT_EMAIL"),
 		ClientID:                os.Getenv("FIREBASE_CLIENT_ID"),
 		AuthURI:                 os.Getenv("FIREBASE_AUTH_URI"),
@@ -50,13 +51,6 @@ func CreateFirebaseInitJson() {
 	file, _ := json.MarshalIndent(config, "", "  ")
 
 	_ = ioutil.WriteFile(os.Getenv("FIREBASE_PRIVATE_KEY_JSON"), file, 0644)
-
-	data, err := os.ReadFile(os.Getenv("FIREBASE_PRIVATE_KEY_JSON"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	os.Stdout.Write(data)
-	os.Stdout.Close()
 }
 
 func InitFirebase() *auth.Client {

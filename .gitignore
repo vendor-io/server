@@ -1,6 +1,7 @@
 keyboardify_gorm.db
 public/
 .env
+.env.old
 .env.development
 auth/key/**.json
 **.json

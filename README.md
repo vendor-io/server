@@ -1,4 +1,4 @@
-## 🎹 Keyboardify - full-stack e-commerce application 
+## 🛒 Vendor.io - full-stack e-commerce application 
 [![Release](https://img.shields.io/github/v/tag/FoxSaysDerp/keyboardify-server?sort=semver)](https://github.com/FoxSaysDerp/keyboardify-server/releases)
 
 #### Environments
